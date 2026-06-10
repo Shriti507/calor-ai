@@ -5,12 +5,15 @@ import {
   Text,
   TouchableOpacity,
   StatusBar,
+  Dimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Background from "../components/common/Background";
 import GlassCard from "../components/common/GlassCard";
 import GlassButton from "../components/common/GlassButton";
 import { COLORS, SIZES, FONTS } from "../constants/theme";
+
+const { width } = Dimensions.get("window");
 
 export default function IntroScreen({ navigation }) {
   const insets = useSafeAreaInsets();
@@ -90,7 +93,10 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   mainCard: {
+    width: width - 48,
+    minHeight: 400,
     alignItems: "center",
+    justifyContent: "center",
     paddingVertical: 40,
     paddingHorizontal: SIZES.lg,
   },

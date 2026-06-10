@@ -4,7 +4,7 @@ import GlassCard from "./common/GlassCard";
 import { COLORS, SIZES, FONTS } from "../constants/theme";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = width - 64;
+const CARD_WIDTH = width - 48;
 
 export default function FoodCard({ food, style }) {
   return (
@@ -46,7 +46,7 @@ export default function FoodCard({ food, style }) {
 const styles = StyleSheet.create({
   card: {
     width: CARD_WIDTH,
-    minHeight: 380,
+    minHeight: 400,
   },
   imageContainer: {
     width: "100%",

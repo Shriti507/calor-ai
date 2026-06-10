@@ -32,9 +32,9 @@ export const COLORS = {
   gradientEnd: "rgba(10, 10, 10, 1)",
 
   // Glassmorphism
-  glassBackground: "rgba(255, 255, 255, 0.05)",
-  glassBorder: "rgba(255, 255, 255, 0.1)",
-  glassOverlay: "rgba(0, 0, 0, 0.3)",
+  glassBackground: "rgba(255, 255, 255, 0.06)",
+  glassBorder: "rgba(255, 255, 255, 0.15)",
+  glassOverlay: "rgba(0, 0, 0, 0.25)",
 
   // Bottom bar
   bottomBarBg: "rgba(20, 20, 22, 0.9)",
