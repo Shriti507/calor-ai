@@ -99,3 +99,16 @@ src/
     └── ResultScreen.js         # Taste profile results
 ```
 
+## Design Decisions & Trade-offs
+
+1. **Glass morphism cross-platform**: Used `expo-blur` `BlurView` on iOS for native frosted-glass. On Android, where blur behaves differently, used a semi-transparent dark background (`rgba(22, 25, 28, 0.92)`) with subtle border — visually consistent without looking broken.
+
+2. **State management**: Chose `useReducer` + Context over Redux/Zustand for simplicity. The app has a single linear flow (Intro → Swipe → Result), so a lightweight reducer handles all state transitions cleanly.
+
+3. **Gesture handling**: Used the modern `react-native-gesture-handler` Gesture API (not the legacy `PanGestureHandler`) combined with `react-native-reanimated` worklets for true 60fps animations on the UI thread.
+
+4. **4-direction swipe**: Implemented swipe in all 4 directions (left/right/up/down) with distinct badge overlays ("No", "Yes", "Superlike ⭐", "Unsure") that fade in based on drag distance.
+
+5. **All data hardcoded**: No backend/API calls — all 20 food items are in `foods.json`. The result screen dynamically generates taste categories, lifestyle traits, and cuisine preferences from the swipe data.
+
+
