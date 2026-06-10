@@ -15,6 +15,7 @@ import GlassCard from "../components/common/GlassCard";
 import { useSwipeContext } from "../context/SwipeContext";
 import { COLORS, SIZES, FONTS, SHADOWS } from "../constants/theme";
 import foodData from "../data/foods.json";
+import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -166,11 +167,14 @@ function PagedSection({ pages, dotCount }) {
     </View>
   );
 }
-
-function FoodListItem({ food, icon = "💙" }) {
+function FoodListItem({ food }) {
   return (
     <View style={styles.listItem}>
-      <Text style={styles.listIcon}>{icon}</Text>
+      <Ionicons
+        name="checkmark-circle"
+        size={22}
+        color="#3B82F6"
+      />
       <Text style={styles.listText}>{food.name}</Text>
     </View>
   );
@@ -255,7 +259,7 @@ export default function ResultScreen({ navigation }) {
           pages={[
             <GlassCard style={styles.listCard} key="love">
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionEmoji}>❤️</Text>
+                <Text style={styles.sectionEmoji}>🧑‍🍳</Text>
                 <View>
                   <Text style={styles.sectionTitle}>Foods You Love</Text>
                   <Text style={styles.sectionSubtitle}>
@@ -265,7 +269,7 @@ export default function ResultScreen({ navigation }) {
               </View>
               {lovedFoods.length > 0 ? (
                 lovedFoods.map((food) => (
-                  <FoodListItem key={food.id} food={food} icon="💙" />
+                  <FoodListItem key={food.id} food={food} isLoved={true} />
                 ))
               ) : (
                 <Text style={styles.emptyText}>No loved foods yet</Text>
@@ -274,7 +278,7 @@ export default function ResultScreen({ navigation }) {
 
             <GlassCard style={styles.listCard} key="hate">
               <View style={styles.sectionHeader}>
-                <Text style={styles.sectionEmoji}>🤮</Text>
+                <Text style={styles.sectionEmoji}>🤷‍♂️</Text>
                 <View>
                   <Text style={styles.sectionTitle}>Foods You Hate</Text>
                   <Text style={styles.sectionSubtitle}>
@@ -284,7 +288,7 @@ export default function ResultScreen({ navigation }) {
               </View>
               {hatedFoods.length > 0 ? (
                 hatedFoods.map((food) => (
-                  <FoodListItem key={food.id} food={food} icon="☑️" />
+                  <FoodListItem key={food.id} food={food} isLoved={false} />
                 ))
               ) : (
                 <Text style={styles.emptyText}>No disliked foods</Text>
@@ -464,15 +468,14 @@ const styles = StyleSheet.create({
   listItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.08)",
     gap: 12,
-  },
-  listIcon: {
-    fontSize: 18,
   },
   listText: {
     color: COLORS.textPrimary,
-    fontSize: SIZES.caption,
+    fontSize: SIZES.body,
     ...FONTS.medium,
     textTransform: "capitalize",
   },

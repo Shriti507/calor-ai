@@ -12,7 +12,7 @@ const leftTabs = [
 
 function renderTabIcon(tab, isActive) {
   const color = isActive ? COLORS.primary : COLORS.tabInactive;
-  const size = 24;
+  const size = 26;
 
   if (tab.key === "FAQ") {
     return (
@@ -93,7 +93,7 @@ export default function BottomBar({ activeTab = "Start", onTabPress }) {
 const styles = StyleSheet.create({
   outerContainer: {
     position: "absolute",
-    bottom: Platform.OS === "ios" ? 34 : 20,
+    bottom: Platform.OS === "ios" ? 44 : 28,
     left: 20,
     right: 20,
     flexDirection: "row",
@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
   tabsRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "center",
+    gap: 12,
     paddingHorizontal: 8,
     height: "100%",
   },
@@ -143,13 +144,13 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
   faqText: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "600",
-    lineHeight: 24,
+    lineHeight: 26,
   },
   tabLabel: {
     color: COLORS.tabInactive,
-    fontSize: 11,
+    fontSize: 13,
     ...FONTS.medium,
     marginTop: 2,
   },

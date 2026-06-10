@@ -10,6 +10,7 @@ import ResultScreen from "../screens/ResultScreen";
 import BottomBar from "../components/navigation/BottomBar";
 import { SwipeProvider } from "../context/SwipeContext";
 
+
 const Stack = createNativeStackNavigator();
 
 function ScreenWithBottomBar({ children, activeTab, navigation }) {
