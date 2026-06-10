@@ -1,4 +1,3 @@
-//Main swipe screen with card stack, progress, and action buttons
 import React, { useCallback } from "react";
 import { StyleSheet, View, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -29,7 +28,6 @@ export default function SwipeScreen({ navigation }) {
 
       dispatch({ type: actionMap[direction], payload: food });
 
-      // Navigate to results when all cards are swiped
       if (currentIndex + 1 >= foods.length) {
         dispatch({ type: "COMPLETE" });
         setTimeout(() => navigation.navigate("Result"), 400);
@@ -38,7 +36,6 @@ export default function SwipeScreen({ navigation }) {
     [currentIndex, dispatch, navigation]
   );
 
-  // Button press handlers — trigger programmatic swipe
   const handleButtonSwipeLeft = useCallback(() => handleSwipe("left"), [handleSwipe]);
   const handleButtonSwipeRight = useCallback(() => handleSwipe("right"), [handleSwipe]);
   const handleButtonSwipeUp = useCallback(() => handleSwipe("up"), [handleSwipe]);
@@ -48,10 +45,8 @@ export default function SwipeScreen({ navigation }) {
     <Background>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={[styles.container, { paddingTop: insets.top }]}>
-        {/* Progress bar */}
         <ProgressBar current={currentIndex} total={foods.length} />
 
-        {/* Card stack */}
         <View style={styles.cardArea}>
           <CardStack
             foods={foods}
@@ -60,7 +55,6 @@ export default function SwipeScreen({ navigation }) {
           />
         </View>
 
-        {/* Action buttons */}
         <View style={[styles.buttonsArea, { paddingBottom: insets.bottom + 20 }]}>
           <SwipeButtons
             onSwipeLeft={handleButtonSwipeLeft}

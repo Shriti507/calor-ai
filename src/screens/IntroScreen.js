@@ -1,4 +1,3 @@
-//Welcome/onboarding screen 
 import React from "react";
 import {
   StyleSheet,
@@ -20,7 +19,6 @@ export default function IntroScreen({ navigation }) {
     <Background>
       <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
       <View style={[styles.container, { paddingTop: insets.top + 12 }]}>
-        {/* Back button */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => {}}
@@ -29,19 +27,14 @@ export default function IntroScreen({ navigation }) {
           <Text style={styles.backArrow}>‹</Text>
         </TouchableOpacity>
 
-        {/* Title */}
         <Text style={styles.title}>Design Your Food Plan</Text>
 
-        {/* Main Glass Card */}
         <View style={styles.cardWrapper}>
           <GlassCard style={styles.mainCard}>
-            {/* Emoji */}
             <Text style={styles.emoji}>😋</Text>
 
-            {/* Card Title */}
             <Text style={styles.cardTitle}>Build Your Taste Profile</Text>
 
-            {/* Description */}
             <Text style={styles.description}>
               Swipe right on foods you love, left on foods you don't.
             </Text>
@@ -50,7 +43,6 @@ export default function IntroScreen({ navigation }) {
               This helps us recommend meals you'll love eating.
             </Text>
 
-            {/* CTA Button */}
             <GlassButton
               title="Start Swiping"
               onPress={() => navigation.navigate("Swipe")}
@@ -58,7 +50,6 @@ export default function IntroScreen({ navigation }) {
               style={styles.ctaButton}
             />
 
-            {/* Time hint */}
             <Text style={styles.timeHint}>Takes about 2 minutes.</Text>
           </GlassCard>
         </View>

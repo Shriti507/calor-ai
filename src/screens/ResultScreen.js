@@ -1,4 +1,3 @@
-// Taste profile results with multiple glass card sections
 import React, { useMemo, useRef } from "react";
 import {
   StyleSheet,
@@ -19,7 +18,6 @@ import foodData from "../data/foods.json";
 
 const { width } = Dimensions.get("window");
 
-// Generate taste highlights from swipe data
 function generateHighlights(liked, superLiked) {
   const all = [...superLiked, ...liked];
   const categoryCount = {};
@@ -40,7 +38,6 @@ function generateHighlights(liked, superLiked) {
 
   const highlights = [];
   
-  // Check categories and tags for specific traits
   if ((categoryCount["protein"] || 0) >= 2) {
     highlights.push({ emoji: "🥩", label: "Protein Power" });
   }
@@ -66,10 +63,8 @@ function generateHighlights(liked, superLiked) {
     highlights.push({ emoji: "🧀", label: "Dairy Fan" });
   }
 
-  // Slice to top 3
   let result = highlights.slice(0, 3);
 
-  // Fallbacks if not enough matches
   const defaultFallbacks = [
     { emoji: "🍽️", label: "Foodie" },
     { emoji: "🌍", label: "Adventurous" },
@@ -84,7 +79,6 @@ function generateHighlights(liked, superLiked) {
   return result;
 }
 
-// Generate lifestyle/goal traits
 function generateLifestyle(liked) {
   const traits = [];
   const hasHealthy = liked.some((f) => (f.tags || []).includes("healthy"));
@@ -101,12 +95,10 @@ function generateLifestyle(liked) {
   return traits.slice(0, 4);
 }
 
-// Generate cuisines from liked foods based on tags
 function generateCuisines(liked, superLiked, availableCuisines = []) {
   const all = [...superLiked, ...liked];
   const cuisineScore = {};
   
-  // Initialize scores
   availableCuisines.forEach((c) => {
     cuisineScore[c.name] = 0;
   });
@@ -130,7 +122,6 @@ function generateCuisines(liked, superLiked, availableCuisines = []) {
     });
   });
 
-  // Return cuisines sorted by score, filtering out 0 score
   return availableCuisines
     .map((c) => ({ ...c, score: cuisineScore[c.name] }))
     .filter((c) => c.score > 0)
@@ -138,7 +129,6 @@ function generateCuisines(liked, superLiked, availableCuisines = []) {
     .slice(0, 3);
 }
 
-// Horizontal paging section component
 function PagedSection({ pages, dotCount }) {
   const scrollRef = useRef(null);
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -165,7 +155,6 @@ function PagedSection({ pages, dotCount }) {
           </View>
         ))}
       </ScrollView>
-      {/* Dot indicators */}
       <View style={styles.dots}>
         {Array.from({ length: dotCount }).map((_, i) => (
           <View
@@ -178,7 +167,6 @@ function PagedSection({ pages, dotCount }) {
   );
 }
 
-// Food list item
 function FoodListItem({ food, icon = "💙" }) {
   return (
     <View style={styles.listItem}>
@@ -214,7 +202,6 @@ export default function ResultScreen({ navigation }) {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
       >
-        {/* Back button */}
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => {
@@ -226,14 +213,12 @@ export default function ResultScreen({ navigation }) {
           <Text style={styles.backArrow}>‹</Text>
         </TouchableOpacity>
 
-        {/* Header */}
         <Text style={styles.title}>Your Taste Profile</Text>
         <Text style={styles.subtitle}>
           Tailored to your unique needs. We'll use this for recommendations and
           meals plans
         </Text>
 
-        {/* Key Highlights */}
         <Text style={styles.sectionLabel}>Key Highlights:</Text>
         <View style={styles.highlightsRow}>
           {highlights.map((h, i) => (
@@ -247,7 +232,6 @@ export default function ResultScreen({ navigation }) {
           ))}
         </View>
 
-        {/* Lifestyle & Goals */}
         <GlassCard style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionEmoji}>💪</Text>
@@ -266,11 +250,9 @@ export default function ResultScreen({ navigation }) {
           ))}
         </GlassCard>
 
-        {/* Foods You Love / Hate / Cuisines — Paged sections */}
         <PagedSection
           dotCount={3}
           pages={[
-            // Page 1: Foods You Love
             <GlassCard style={styles.listCard} key="love">
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionEmoji}>❤️</Text>
@@ -290,7 +272,6 @@ export default function ResultScreen({ navigation }) {
               )}
             </GlassCard>,
 
-            // Page 2: Foods You Hate
             <GlassCard style={styles.listCard} key="hate">
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionEmoji}>🤮</Text>
@@ -310,7 +291,6 @@ export default function ResultScreen({ navigation }) {
               )}
             </GlassCard>,
 
-            // Page 3: Favorite Cuisines
             <GlassCard style={styles.listCard} key="cuisines">
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionEmoji}>🏆</Text>
@@ -338,7 +318,6 @@ export default function ResultScreen({ navigation }) {
           ]}
         />
 
-        {/* Bottom padding */}
         <View style={{ height: insets.bottom + 100 }} />
       </ScrollView>
     </Background>
@@ -386,7 +365,6 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
     marginBottom: SIZES.md,
   },
-  // Key Highlights
   highlightsRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -418,7 +396,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.15)",
     marginHorizontal: SIZES.sm,
   },
-  // Section card
   sectionCard: {
     marginBottom: SIZES.md,
   },
@@ -442,7 +419,6 @@ const styles = StyleSheet.create({
     ...FONTS.regular,
     marginTop: 2,
   },
-  // Trait rows
   traitRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -460,7 +436,6 @@ const styles = StyleSheet.create({
     fontSize: SIZES.caption,
     ...FONTS.medium,
   },
-  // Paged sections
   pagedContainer: {
     gap: 16,
   },
@@ -483,7 +458,6 @@ const styles = StyleSheet.create({
   dotActive: {
     backgroundColor: COLORS.textPrimary,
   },
-  // List cards
   listCard: {
     minHeight: 200,
   },
