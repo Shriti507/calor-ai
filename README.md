@@ -1,114 +1,146 @@
-# CalorAI Taste Profile 
+# CalorAI Taste Profile (Expo app)
 
-A beautiful, swipeable food preference interface built with React Native (Expo). Users swipe through food cards to build their taste profile, which is then summarized in a detailed results screen.
+A premium, highly interactive food preference swipe interface built using React Native and Expo. Users build a personalized taste profile by swiping food cards in 4 directions, which is then compiled into a high-fidelity glassmorphism results dashboard.
 
+---
 
+## Project Overview
 
-## Features
+CalorAI allows users to visually configure their dining and macro tastes through intuitive swipe gestures. The layout is optimized to match high-fidelity forest-green glassmorphism mockup design properties:
 
-### Core
-- **Intro Screen** — Welcome/onboarding with glassmorphism card and CTA button
-- **Swipe Screen** — Stack of food cards with 4-direction swipe gestures:
-  - Swipe **right** → Like (Yes)
-  - Swipe **left** → Dislike (No)
-  - Swipe **up** → Super Like ⭐
-  - Swipe **down** → Not Sure
-- **Result Screen** — Taste profile summary with:
-  - Key Highlights (top food categories)
-  - Lifestyle & Goals checklist
-  - Horizontally-paged: Foods You Love / Foods You Hate / Favorite Cuisines
-- **Glass/blur bottom navigation** bar (Start, FAQ, Taste Profile, Search)
-- **Progress bar** that updates as the user swipes
+* **Intro/Onboarding Screen**: High-end glass welcome card detailing instructions with custom CTA navigations.
+* **Swipe Deck Screen**: Smooth 60 FPS gesture-driven card deck supporting 4-direction swiping, contextual swipe badge overlays, interactive tactile button controls, and a spring-animated progress bar.
+* **Taste Profile Dashboard**: A responsive, horizontally-paged results system summarizing liked counts, disliked counts, key highlight cards, personalized lifestyle goals, and dynamic content-driven food lists.
 
-### Design
-- Dark theme with gradient backgrounds
-- Frosted-glass (glassmorphism) cards using `expo-blur`
-- Green accent color (#4ADE80) throughout
-- Smooth 60fps animations with `react-native-reanimated`
-- Card rotation during swipe with spring physics
+---
 
-### Cross-Platform
-- **iOS**: Native `BlurView` for glass effects
-- **Android**: Semi-transparent dark fallback for glass cards, ensuring the UI never looks broken
+## Folder Structure
 
-## Tech Stack
+```text
+calor-ai/
+├── src/
+│   ├── components/
+│   │   ├── common/
+│   │   │   ├── Background.js
+│   │   │   ├── GlassButton.js
+│   │   │   └── GlassCard.js
+│   │   ├── navigation/
+│   │   │   └── BottomBar.js
+│   │   ├── result/
+│   │   │   └── FoodListSection.js
+│   │   └── swipe/
+│   │       ├── CardStack.js
+│   │       ├── ProgressBar.js
+│   │       └── SwipeButtons.js
+│   ├── constants/
+│   │   └── theme.js
+│   ├── context/
+│   │   └── SwipeContext.js
+│   ├── data/
+│   │   └── foods.json
+│   ├── hooks/
+│   │   └── useCardAnimation.js
+│   ├── navigation/
+│   │   └── AppNavigator.js
+│   └── screens/
+│       ├── IntroScreen.js
+│       ├── ResultScreen.js
+│       └── SwipeScreen.js
+```
 
-| Library | Purpose |
-|---------|---------|
-| React Native (Expo SDK 54) | Framework |
-| `react-native-gesture-handler` | Swipe gesture handling |
-| `react-native-reanimated` | Smooth 60fps animations |
-| `expo-blur` | iOS frosted-glass effects |
-| `expo-linear-gradient` | Gradient backgrounds |
-| `@react-navigation/native` | Screen navigation |
-| `@react-navigation/native-stack` | Stack navigator |
-| `react-native-safe-area-context` | Safe area handling |
+---
 
-## Setup & Run
+## Setup & Installation (Expo Go)
 
 ### Prerequisites
-- Node.js 18+
-- Expo Go app installed on your phone ([iOS](https://apps.apple.com/app/expo-go/id982107779) / [Android](https://play.google.com/store/apps/details?id=host.exp.exponent))
+* **Node.js**: Version 18 or higher.
+* **Expo Go App**: Pre-installed on your mobile device ([iOS App Store](https://apps.apple.com/app/expo-go/id982107779) / [Google Play Store](https://play.google.com/store/apps/details?id=host.exp.exponent)).
 
-### Installation
+### Run the App Locally
 
-```bash
-# Clone the repo
-git clone https://github.com/Shriti507/calor-ai.git
-cd calor-ai
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Shriti507/calor-ai.git
+   cd calor-ai
+   ```
 
-# Install dependencies
-npm install
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-# Start the dev server
-npx expo start --clear
-```
+3. **Start the Expo Development Server**:
+   ```bash
+   npx expo start 
+   ```
 
-### Running on Device
-1. Open Expo Go on your phone
-2. Scan the QR code shown in the terminal
-3. The app will load on your device
+4. **Launch on Expo Go**:
+   * **Android**: Scan the terminal QR code using the scanner in the Expo Go app.
+   * **iOS**: Scan the QR code using your phone's default Camera app, then tap the prompt to open in Expo Go.
 
-## Project Structure
+---
 
-```
-src/
-├── components/
-│   ├── common/
-│   │   ├── Background.js      # Gradient background with ambient glow
-│   │   ├── GlassCard.js       # Frosted-glass card (blur + Android fallback)
-│   │   └── GlassButton.js     # Pill-shaped button (primary/glass variants)
-│   ├── navigation/
-│   │   └── BottomBar.js        # Glass-blur bottom tab bar
-│   ├── swipe/
-│   │   ├── CardStack.js        # Gesture-driven swipeable card stack
-│   │   ├── ProgressBar.js      # Green progress indicator
-│   │   └── SwipeButtons.js     # 4 action buttons (like/dislike/super/unsure)
-│   └── FoodCard.js             # Individual food card (emoji + text)
-├── constants/
-│   └── theme.js                # Design tokens (colors, fonts, spacing, shadows)
-├── context/
-│   └── SwipeContext.js         # Global state for swipe tracking (useReducer)
-├── data/
-│   └── foods.json              # 20 food preference cards
-├── navigation/
-│   └── AppNavigator.js         # Stack navigator + SwipeProvider
-└── screens/
-    ├── IntroScreen.js          # Welcome/onboarding screen
-    ├── SwipeScreen.js          # Main swiping interface
-    └── ResultScreen.js         # Taste profile results
-```
+## Libraries Used & Rationale
+
+| Library | Purpose & Why |
+| :--- | :--- |
+| **`react-native-reanimated`** | Drives high-performance animations (card drag offsets, rotations, and spring-loaded progress bar scales) completely on the UI thread at 60 FPS. |
+| **`react-native-gesture-handler`** | Captures fluid gesture parameters (drag translations and velocity vectors) using the modern declarative Gesture API. |
+| **`expo-blur`** | Renders high-end frosted-glass surfaces on iOS devices using native blurs. |
+| **`expo-linear-gradient`** | Generates dynamic 135deg diagonal borders on cards and backdrop aurora radial glows. |
+| **`expo-image`** | Replaces default image loaders in `FoodCard.js` to enable progressive disk and memory caching, placeholder fades, and zero image flashes. |
+| **`expo-haptics`** | Triggers subtle tactile micro-vibrations on swipe completions and button taps. |
+| **`react-native-safe-area-context`** | Resolves platform notch constraints across notch-laden iOS screens and Android status bars. |
+
+---
 
 ## Design Decisions & Trade-offs
 
-1. **Glass morphism cross-platform**: Used `expo-blur` `BlurView` on iOS for native frosted-glass. On Android, where blur behaves differently, used a semi-transparent dark background (`rgba(22, 25, 28, 0.92)`) with subtle border — visually consistent without looking broken.
+1. **Card Layout Separation**:
+   * *Decision*: Destructured margins, heights, and positions away from padding styles when flattening elements in `GlassCard.js`.
+   * *Trade-off*: Adds minimal style parser overhead during component initialization, but prevents the 1px linear gradient border wrapper from overlapping content and fixes child layout centering.
+2. **Conditional flexGrow Sizing**:
+   * *Decision*: Designed `GlassCard.js` to dynamically evaluate size constraint properties (`height`, `minHeight`, `flex`, `flexGrow`). It only stretches cards via `flexGrow: 1` if a fixed size constraint exists.
+   * *Trade-off*: Requires checking properties, but ensures the card dynamically shrinks when empty (e.g. empty Result lists) instead of stretching into blank, tall layouts.
+3. **State Architecture**:
+   * *Decision*: Implemented `useReducer` combined with `Context` (`SwipeContext.js`) instead of external state libraries like Redux or Zustand.
+   * *Trade-off*: Limits absolute middleware customizability, but keeps the swipe deck state logic local, fast, and extremely easy to scale for Expo Go compatibility.
 
-2. **State management**: Chose `useReducer` + Context over Redux/Zustand for simplicity. The app has a single linear flow (Intro → Swipe → Result), so a lightweight reducer handles all state transitions cleanly.
+---
 
-3. **Gesture handling**: Used the modern `react-native-gesture-handler` Gesture API (not the legacy `PanGestureHandler`) combined with `react-native-reanimated` worklets for true 60fps animations on the UI thread.
+## Cross-Platform Adaptation
 
-4. **4-direction swipe**: Implemented swipe in all 4 directions (left/right/up/down) with distinct badge overlays ("No", "Yes", "Superlike ⭐", "Unsure") that fade in based on drag distance.
+### iOS (Rich Visuals)
+* Native background glass blurs are handled using `<BlurView>` (tint dark, intensity `20` to `40`).
+* Drop-shadows are rendered using CoreGraphics shadow coordinates (`shadowOpacity: 0.4`, `shadowRadius: 20`, `shadowOffset: { width: 0, height: 8 }`).
 
-5. **All data hardcoded**: No backend/API calls — all 20 food items are in `foods.json`. The result screen dynamically generates taste categories, lifestyle traits, and cuisine preferences from the swipe data.
+### Android (Performance Fallbacks)
+* Since native blur can cause performance degradation on low-end Android hardware, blurs fall back to semi-transparent surfaces (`rgba(22, 25, 28, 0.92)` on bar, `#0e1a16` on cards) overlaid with thin borders.
+* Shadow rendering drops back to high elevation scales (`elevation: 8` to `10`) to approximate depth mapping natively.
 
+---
 
+## Tech Stack Summary
+
+* **Core Framework**: React Native (Expo SDK 54)
+* **Navigation**: React Navigation (Native Stack)
+* **Gestures & Animations**: React Native Gesture Handler & React Native Reanimated (60 FPS UI-thread animations)
+* **Visual Effects**: Expo Blur (iOS native frosted-glass) & Expo Linear Gradient (dynamic card borders & aurora flows)
+* **Media & Performance**: Expo Image (progressive disk caching and fade transitions)
+* **Haptics**: Expo Haptics (tactile impact vibrations)
+
+---
+
+## Development Time Breakdown (8 Hours Total)
+
+* **Phase 1: Setup & Project Scaffold (1.5 Hours)**: Project initialization, configuring navigation, mapping JSON data, and setting up theme constants.
+* **Phase 2: Gesture & Reanimated Integration (2 Hours)**: Writing custom card physics hooks, Pan tracking, rotation animations, and gesture locks.
+* **Phase 3: Visual Polish & Layout Tuning (2.5 Hours)**: Designing diagonal shiny card borders, solving layout alignments, and fixing scroll snapping boundaries.
+* **Phase 4: Integrations (1.5 Hours)**: Integrating Expo Image caching, connecting tactile haptic feedback mechanisms, and cleanups.
+* **Phase 5: Documentation & Wrap-Up (0.5 Hours)**: Code comments cleanup and writing README.md instructions.
+
+---
+
+## AI Development Methodology
+
+This project was developed with the assistance of **ChatGPT** and **Antigravity** (for layout refinements, modular refactoring, gesture lock setups, and design system alignment audits).
