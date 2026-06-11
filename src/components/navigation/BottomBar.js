@@ -53,7 +53,7 @@ export default function BottomBar({ activeTab = "Start", onTabPress }) {
           <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
         )}
         <View style={[StyleSheet.absoluteFill, styles.overlay]} />
-        
+
         <View style={styles.tabsRow}>
           {leftTabs.map((tab) => {
             const isActive = activeTab === tab.key;

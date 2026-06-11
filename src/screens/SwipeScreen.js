@@ -1,6 +1,7 @@
-import React, { useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { StyleSheet, View, StatusBar } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 import Background from "../components/common/Background";
 import ProgressBar from "../components/swipe/ProgressBar";
 import CardStack from "../components/swipe/CardStack";
@@ -13,11 +14,24 @@ export default function SwipeScreen({ navigation }) {
   const insets = useSafeAreaInsets();
   const { state, dispatch } = useSwipeContext();
   const { currentIndex } = state;
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const cardStackRef = useRef(null);
 
   const handleSwipe = useCallback(
-    (direction) => {
+    (direction, isGesture = false) => {
+      if (!isGesture && isTransitioning) return;
+
       const food = foods[currentIndex];
       if (!food) return;
+
+      setIsTransitioning(true);
+
+     
+      try {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      } catch (e) {
+        
+      }
 
       const actionMap = {
         right: "SWIPE_RIGHT",
@@ -28,18 +42,49 @@ export default function SwipeScreen({ navigation }) {
 
       dispatch({ type: actionMap[direction], payload: food });
 
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, isGesture ? 50 : 350);
+
       if (currentIndex + 1 >= foods.length) {
         dispatch({ type: "COMPLETE" });
         setTimeout(() => navigation.navigate("Result"), 400);
       }
     },
-    [currentIndex, dispatch, navigation]
+    [currentIndex, dispatch, navigation, isTransitioning]
   );
 
-  const handleButtonSwipeLeft = useCallback(() => handleSwipe("left"), [handleSwipe]);
-  const handleButtonSwipeRight = useCallback(() => handleSwipe("right"), [handleSwipe]);
-  const handleButtonSwipeUp = useCallback(() => handleSwipe("up"), [handleSwipe]);
-  const handleButtonSwipeDown = useCallback(() => handleSwipe("down"), [handleSwipe]);
+  const handleButtonSwipeLeft = useCallback(() => {
+    if (isTransitioning) return;
+    try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    } catch (e) { }
+    cardStackRef.current?.swipeLeft();
+  }, [isTransitioning]);
+
+  const handleButtonSwipeRight = useCallback(() => {
+    if (isTransitioning) return;
+    try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    } catch (e) { }
+    cardStackRef.current?.swipeRight();
+  }, [isTransitioning]);
+
+  const handleButtonSwipeUp = useCallback(() => {
+    if (isTransitioning) return;
+    try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    } catch (e) { }
+    cardStackRef.current?.swipeUp();
+  }, [isTransitioning]);
+
+  const handleButtonSwipeDown = useCallback(() => {
+    if (isTransitioning) return;
+    try {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    } catch (e) { }
+    cardStackRef.current?.swipeDown();
+  }, [isTransitioning]);
 
   return (
     <Background>
@@ -49,9 +94,12 @@ export default function SwipeScreen({ navigation }) {
 
         <View style={styles.cardArea}>
           <CardStack
+            ref={cardStackRef}
             foods={foods}
             currentIndex={currentIndex}
             onSwipe={handleSwipe}
+            isTransitioning={isTransitioning}
+            setIsTransitioning={setIsTransitioning}
           />
         </View>
 

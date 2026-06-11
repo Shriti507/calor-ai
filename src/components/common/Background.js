@@ -1,24 +1,35 @@
-
 import React from "react";
-import { StyleSheet, View, Dimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { COLORS } from "../../constants/theme";
-
-const { width, height } = Dimensions.get("window");
 
 export default function Background({ children, style }) {
   return (
     <View style={[styles.container, style]}>
+
+      <View style={[StyleSheet.absoluteFill, styles.baseBg]} />
+
       <LinearGradient
-        colors={[COLORS.gradientStart, COLORS.gradientMid, COLORS.gradientEnd]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFill}
+        colors={["rgba(8, 12, 12, 0.70)", "transparent"]}
+        start={{ x: 0.5, y: 0.5 }}
+        end={{ x: 1.0, y: 1.0 }}
+        style={StyleSheet.absoluteFillObject}
       />
-      
-      <View style={styles.glowTopLeft} />
-      
-      <View style={styles.glowBottomRight} />
+
+     
+      <LinearGradient
+        colors={["rgba(10, 58, 74, 0.60)", "transparent"]}
+        start={{ x: 0.0, y: 0.15 }}
+        end={{ x: 0.55, y: 0.60 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+
+      <LinearGradient
+        colors={["rgba(13, 61, 42, 0.56)", "transparent"]}
+        start={{ x: 1.0, y: 0.50 }}
+        end={{ x: 0.72, y: 0.50 }}
+        style={StyleSheet.absoluteFillObject}
+      />
+
       {children}
     </View>
   );
@@ -27,24 +38,10 @@ export default function Background({ children, style }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: "#080c0c",
+    overflow: "hidden",
   },
-  glowTopLeft: {
-    position: "absolute",
-    top: -50,
-    left: -50,
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: "rgba(56, 189, 248, 0.06)",
-  },
-  glowBottomRight: {
-    position: "absolute",
-    bottom: 100,
-    right: -80,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "rgba(74, 222, 128, 0.04)",
+  baseBg: {
+    backgroundColor: "#080c0c",
   },
 });

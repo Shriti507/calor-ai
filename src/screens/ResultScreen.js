@@ -10,126 +10,16 @@ import {
   FlatList,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { LinearGradient } from "expo-linear-gradient";
 import Background from "../components/common/Background";
 import GlassCard from "../components/common/GlassCard";
 import { useSwipeContext } from "../context/SwipeContext";
 import { COLORS, SIZES, FONTS, SHADOWS } from "../constants/theme";
 import foodData from "../data/foods.json";
 import { Ionicons } from "@expo/vector-icons";
+import { generateHighlights, generateLifestyle, generateCuisines } from "../utils/tasteProfile";
+import FoodListSection from "../components/result/FoodListSection";
 
 const { width } = Dimensions.get("window");
-
-function generateHighlights(liked, superLiked) {
-  const all = [...superLiked, ...liked];
-  const categoryCount = {};
-  const tagCount = {};
-  
-  all.forEach((food) => {
-    if (food.category) {
-      const cat = food.category.toLowerCase();
-      categoryCount[cat] = (categoryCount[cat] || 0) + 1;
-    }
-    if (food.tags) {
-      food.tags.forEach((t) => {
-        const tag = t.toLowerCase();
-        tagCount[tag] = (tagCount[tag] || 0) + 1;
-      });
-    }
-  });
-
-  const highlights = [];
-  
-  if ((categoryCount["protein"] || 0) >= 2) {
-    highlights.push({ emoji: "🥩", label: "Protein Power" });
-  }
-  if ((categoryCount["vegetable"] || 0) >= 2) {
-    highlights.push({ emoji: "🥬", label: "Veggie Lover" });
-  }
-  if ((categoryCount["carb"] || 0) >= 2) {
-    highlights.push({ emoji: "🍝", label: "Carb Enthusiast" });
-  }
-  if ((tagCount["plant-based"] || 0) >= 1 || (tagCount["vegan"] || 0) >= 1) {
-    highlights.push({ emoji: "🌱", label: "Plant-Powered" });
-  }
-  if ((tagCount["fish"] || 0) >= 1 || (tagCount["seafood"] || 0) >= 1) {
-    highlights.push({ emoji: "🐟", label: "Seafood Lover" });
-  }
-  if ((tagCount["healthy"] || 0) >= 2) {
-    highlights.push({ emoji: "🥗", label: "Clean Eater" });
-  }
-  if ((tagCount["comfort"] || 0) >= 2) {
-    highlights.push({ emoji: "🍕", label: "Comfort Fan" });
-  }
-  if ((tagCount["dairy"] || 0) >= 1) {
-    highlights.push({ emoji: "🧀", label: "Dairy Fan" });
-  }
-
-  let result = highlights.slice(0, 3);
-
-  const defaultFallbacks = [
-    { emoji: "🍽️", label: "Foodie" },
-    { emoji: "🌍", label: "Adventurous" },
-    { emoji: "✨", label: "Unique Taste" },
-  ];
-  for (const fb of defaultFallbacks) {
-    if (result.length < 3 && !result.some((h) => h.label === fb.label)) {
-      result.push(fb);
-    }
-  }
-
-  return result;
-}
-
-function generateLifestyle(liked) {
-  const traits = [];
-  const hasHealthy = liked.some((f) => (f.tags || []).includes("healthy"));
-  const hasProtein = liked.some((f) => f.category === "protein");
-  const hasVeggie = liked.some((f) => f.category === "vegetable");
-  const hasPlantBased = liked.some((f) => (f.tags || []).includes("plant-based"));
-
-  if (hasHealthy) traits.push("Clean & Wholesome Focus");
-  if (hasProtein) traits.push("High Protein Athletic Goal");
-  if (hasVeggie) traits.push("Rich Micronutrient Diet");
-  if (hasPlantBased) traits.push("Plant-Forward Lifestyle");
-  traits.push("PCOS & GI Diet Friendly");
-
-  return traits.slice(0, 4);
-}
-
-function generateCuisines(liked, superLiked, availableCuisines = []) {
-  const all = [...superLiked, ...liked];
-  const cuisineScore = {};
-  
-  availableCuisines.forEach((c) => {
-    cuisineScore[c.name] = 0;
-  });
-
-  const cuisineTagMap = {
-    Italian: ["italian"],
-    Mexican: ["mexican"],
-    Japanese: ["japanese"],
-    Mediterranean: ["mediterranean", "fish", "omega-3", "salad", "seafood", "shellfish"],
-    American: ["american", "burger", "steak", "potatoes", "comfort", "red-meat"],
-  };
-
-  all.forEach((food) => {
-    const tags = food.tags || [];
-    availableCuisines.forEach((c) => {
-      const matchTags = cuisineTagMap[c.name] || [c.name.toLowerCase()];
-      const hasMatch = tags.some((tag) => matchTags.includes(tag.toLowerCase()));
-      if (hasMatch) {
-        cuisineScore[c.name] += 1;
-      }
-    });
-  });
-
-  return availableCuisines
-    .map((c) => ({ ...c, score: cuisineScore[c.name] }))
-    .filter((c) => c.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
-}
 
 
 function PagedSection({ pages, dotCount }) {
@@ -137,7 +27,7 @@ function PagedSection({ pages, dotCount }) {
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   const onScroll = (e) => {
-    const pageIndex = Math.round(e.nativeEvent.contentOffset.x / (width - 64));
+    const pageIndex = Math.round(e.nativeEvent.contentOffset.x / (width - 32));
     setActiveIndex(pageIndex);
   };
 
@@ -266,41 +156,25 @@ export default function ResultScreen({ navigation }) {
         <PagedSection
           dotCount={3}
           pages={[
-            <GlassCard key="love" style={{ padding: 0 }}>
-              <View style={styles.listCardInner}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardTitle}>
-                    <Text style={styles.emojiText}>🧑‍🍳</Text> Foods You Love
-                  </Text>
-                  <Text style={styles.cardSub}>We'll Recommend These</Text>
-                </View>
-                {lovedFoods.length > 0 ? (
-                  lovedFoods.map((food, idx) => (
-                    <FoodListItem key={food.id} food={food} isLast={idx === lovedFoods.length - 1} />
-                  ))
-                ) : (
-                  <Text style={styles.emptyText}>No loved foods yet</Text>
-                )}
-              </View>
-            </GlassCard>,
+            <FoodListSection
+              key="love"
+              title="Foods You Love"
+              subtitle="We'll Recommend These"
+              foods={lovedFoods}
+              emptyMessage="No loved foods yet"
+              icon="🧑‍🍳"
+              ListItemComponent={FoodListItem}
+            />,
 
-            <GlassCard key="hate" style={{ padding: 0 }}>
-              <View style={styles.listCardInner}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardTitle}>
-                    <Text style={styles.emojiText}>🤷‍♂️</Text> Foods You Hate
-                  </Text>
-                  <Text style={styles.cardSub}>These will never be on the menu</Text>
-                </View>
-                {hatedFoods.length > 0 ? (
-                  hatedFoods.map((food, idx) => (
-                    <FoodListItem key={food.id} food={food} isLast={idx === hatedFoods.length - 1} />
-                  ))
-                ) : (
-                  <Text style={styles.emptyText}>No disliked foods</Text>
-                )}
-              </View>
-            </GlassCard>,
+            <FoodListSection
+              key="hate"
+              title="Foods You Hate"
+              subtitle="These will never be on the menu"
+              foods={hatedFoods}
+              emptyMessage="No disliked foods"
+              icon="🤷‍♂️"
+              ListItemComponent={FoodListItem}
+            />,
 
             <GlassCard key="cuisines" style={{ padding: 0 }}>
               <View style={styles.listCardInner}>
@@ -453,12 +327,11 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
   },
   pagedContainer: {
-    gap: 8,
+    alignItems: "flex-start",
   },
   pageItem: {
-    width: width - 64,
-    alignItems: "center",
-    justifyContent: "center",
+    width: width - 32,
+    alignItems: "stretch",
   },
   dots: {
     flexDirection: "row",

@@ -1,4 +1,4 @@
-// GlassButton.js — Pill-shaped button with glass or solid style
+
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { COLORS, SIZES, FONTS, SHADOWS } from "../../constants/theme";
@@ -6,7 +6,7 @@ import { COLORS, SIZES, FONTS, SHADOWS } from "../../constants/theme";
 export default function GlassButton({
   title,
   onPress,
-  variant = "primary", 
+  variant = "primary",
   style,
   textStyle,
 }) {
