@@ -10,6 +10,7 @@ import {
   FlatList,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import Background from "../components/common/Background";
 import GlassCard from "../components/common/GlassCard";
 import { useSwipeContext } from "../context/SwipeContext";
@@ -130,6 +131,7 @@ function generateCuisines(liked, superLiked, availableCuisines = []) {
     .slice(0, 3);
 }
 
+
 function PagedSection({ pages, dotCount }) {
   const scrollRef = useRef(null);
   const [activeIndex, setActiveIndex] = React.useState(0);
@@ -167,15 +169,16 @@ function PagedSection({ pages, dotCount }) {
     </View>
   );
 }
-function FoodListItem({ food }) {
+function FoodListItem({ food, isLast }) {
   return (
-    <View style={styles.listItem}>
-      <Ionicons
-        name="checkmark-circle"
-        size={22}
-        color="#3B82F6"
-      />
-      <Text style={styles.listText}>{food.name}</Text>
+    <View>
+      <View style={styles.foodItem}>
+        <View style={styles.checkCircle}>
+          <Ionicons name="checkmark" size={13} color="#FFFFFF" />
+        </View>
+        <Text style={styles.foodName}>{food.name}</Text>
+      </View>
+      {!isLast && <View style={styles.divider} />}
     </View>
   );
 }
@@ -195,7 +198,7 @@ export default function ResultScreen({ navigation }) {
     [liked, superLiked]
   );
 
-  const lovedFoods = [...superLiked, ...liked];
+  const lovedFoods = [...liked];
   const hatedFoods = disliked;
 
   return (
@@ -224,100 +227,106 @@ export default function ResultScreen({ navigation }) {
         </Text>
 
         <Text style={styles.sectionLabel}>Key Highlights:</Text>
-        <View style={styles.highlightsRow}>
-          {highlights.map((h, i) => (
-            <React.Fragment key={i}>
-              {i > 0 && <View style={styles.highlightDivider} />}
-              <View style={styles.highlightItem}>
-                <Text style={styles.highlightEmoji}>{h.emoji}</Text>
-                <Text style={styles.highlightLabel}>{h.label}</Text>
-              </View>
-            </React.Fragment>
-          ))}
-        </View>
-
-        <GlassCard style={styles.sectionCard}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionEmoji}>💪</Text>
-            <View>
-              <Text style={styles.sectionTitle}>Lifestyle & Goals</Text>
-              <Text style={styles.sectionSubtitle}>
-                We'll use this to tailor your advice & meal plan
-              </Text>
-            </View>
+        <GlassCard style={styles.highlightsCard}>
+          <View style={styles.highlightsRow}>
+            {highlights.map((h, i) => (
+              <React.Fragment key={i}>
+                {i > 0 && <View style={styles.highlightDivider} />}
+                <View style={styles.highlightItem}>
+                  <Text style={styles.highlightEmoji}>{h.emoji}</Text>
+                  <Text style={styles.highlightLabel}>{h.label}</Text>
+                </View>
+              </React.Fragment>
+            ))}
           </View>
-          {lifestyle.map((trait, i) => (
-            <View key={i} style={styles.traitRow}>
-              <Text style={styles.checkGreen}>✅</Text>
-              <Text style={styles.traitText}>{trait}</Text>
+        </GlassCard>
+
+        <GlassCard style={[styles.sectionCard, { padding: 0 }]}>
+          <View style={styles.listCardInner}>
+            <View style={styles.cardHeader}>
+              <Text style={styles.cardTitle}>
+                <Text style={styles.emojiText}>💪</Text> Lifestyle & Goals
+              </Text>
+              <Text style={styles.cardSub}>We'll tailor your advice & meal plan</Text>
             </View>
-          ))}
+            {lifestyle.map((trait, i) => (
+              <View key={i}>
+                <View style={styles.foodItem}>
+                  <View style={[styles.checkCircle, { backgroundColor: COLORS.primary || "#4ADE80" }]}>
+                    <Ionicons name="checkmark" size={13} color="#FFFFFF" />
+                  </View>
+                  <Text style={styles.foodName}>{trait}</Text>
+                </View>
+                {i < lifestyle.length - 1 && <View style={styles.divider} />}
+              </View>
+            ))}
+          </View>
         </GlassCard>
 
         <PagedSection
           dotCount={3}
           pages={[
-            <GlassCard style={styles.listCard} key="love">
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionEmoji}>🧑‍🍳</Text>
-                <View>
-                  <Text style={styles.sectionTitle}>Foods You Love</Text>
-                  <Text style={styles.sectionSubtitle}>
-                    We'll Recommend These
+            <GlassCard key="love" style={{ padding: 0 }}>
+              <View style={styles.listCardInner}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle}>
+                    <Text style={styles.emojiText}>🧑‍🍳</Text> Foods You Love
                   </Text>
+                  <Text style={styles.cardSub}>We'll Recommend These</Text>
                 </View>
+                {lovedFoods.length > 0 ? (
+                  lovedFoods.map((food, idx) => (
+                    <FoodListItem key={food.id} food={food} isLast={idx === lovedFoods.length - 1} />
+                  ))
+                ) : (
+                  <Text style={styles.emptyText}>No loved foods yet</Text>
+                )}
               </View>
-              {lovedFoods.length > 0 ? (
-                lovedFoods.map((food) => (
-                  <FoodListItem key={food.id} food={food} isLoved={true} />
-                ))
-              ) : (
-                <Text style={styles.emptyText}>No loved foods yet</Text>
-              )}
             </GlassCard>,
 
-            <GlassCard style={styles.listCard} key="hate">
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionEmoji}>🤷‍♂️</Text>
-                <View>
-                  <Text style={styles.sectionTitle}>Foods You Hate</Text>
-                  <Text style={styles.sectionSubtitle}>
-                    These will never be on the menu
+            <GlassCard key="hate" style={{ padding: 0 }}>
+              <View style={styles.listCardInner}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle}>
+                    <Text style={styles.emojiText}>🤷‍♂️</Text> Foods You Hate
                   </Text>
+                  <Text style={styles.cardSub}>These will never be on the menu</Text>
                 </View>
+                {hatedFoods.length > 0 ? (
+                  hatedFoods.map((food, idx) => (
+                    <FoodListItem key={food.id} food={food} isLast={idx === hatedFoods.length - 1} />
+                  ))
+                ) : (
+                  <Text style={styles.emptyText}>No disliked foods</Text>
+                )}
               </View>
-              {hatedFoods.length > 0 ? (
-                hatedFoods.map((food) => (
-                  <FoodListItem key={food.id} food={food} isLoved={false} />
-                ))
-              ) : (
-                <Text style={styles.emptyText}>No disliked foods</Text>
-              )}
             </GlassCard>,
 
-            <GlassCard style={styles.listCard} key="cuisines">
-              <View style={styles.sectionHeader}>
-                <Text style={styles.sectionEmoji}>🏆</Text>
-                <View>
-                  <Text style={styles.sectionTitle}>Your Favorite Cuisines</Text>
-                  <Text style={styles.sectionSubtitle}>
-                    Flavors you love, all in one place
+            <GlassCard key="cuisines" style={{ padding: 0 }}>
+              <View style={styles.listCardInner}>
+                <View style={styles.cardHeader}>
+                  <Text style={styles.cardTitle}>
+                    <Text style={styles.emojiText}>🏆</Text> Favorite Cuisines
                   </Text>
+                  <Text style={styles.cardSub}>Flavors you love, all in one place</Text>
                 </View>
-              </View>
-              {cuisines.length > 0 ? (
-                cuisines.map((cuisine, i) => (
-                  <View key={cuisine.id || i} style={styles.traitRow}>
-                    <Text style={styles.checkBlue}>{cuisine.emoji}</Text>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.traitText}>{cuisine.name}</Text>
-                      <Text style={styles.cuisineDesc}>{cuisine.description}</Text>
+                {cuisines.length > 0 ? (
+                  cuisines.map((cuisine, idx) => (
+                    <View key={cuisine.id || idx}>
+                      <View style={styles.foodItem}>
+                        <Text style={styles.cuisineEmoji}>{cuisine.emoji}</Text>
+                        <View style={{ flex: 1 }}>
+                          <Text style={styles.foodName}>{cuisine.name}</Text>
+                          <Text style={styles.cuisineDesc}>{cuisine.description}</Text>
+                        </View>
+                      </View>
+                      {idx < cuisines.length - 1 && <View style={styles.divider} />}
                     </View>
-                  </View>
-                ))
-              ) : (
-                <Text style={styles.emptyText}>Keep swiping to discover!</Text>
-              )}
+                  ))
+                ) : (
+                  <Text style={styles.emptyText}>Keep swiping to discover!</Text>
+                )}
+              </View>
             </GlassCard>,
           ]}
         />
@@ -361,24 +370,24 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontSize: SIZES.caption,
     lineHeight: 20,
-    marginBottom: SIZES.lg,
+    marginBottom: 25,
   },
   sectionLabel: {
     color: COLORS.textSecondary,
     fontSize: SIZES.caption,
     ...FONTS.medium,
-    marginBottom: SIZES.md,
+    marginBottom: 12,
+  },
+  highlightsCard: {
+    marginBottom: 25,
+  },
+  highlightsInner: {
+    padding: SIZES.lg,
   },
   highlightsRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(22, 25, 28, 0.8)",
-    borderRadius: SIZES.cardBorderRadius,
-    borderWidth: 1,
-    borderColor: COLORS.glassBorder,
-    padding: SIZES.lg,
-    marginBottom: SIZES.lg,
   },
   highlightItem: {
     alignItems: "center",
@@ -401,7 +410,10 @@ const styles = StyleSheet.create({
     marginHorizontal: SIZES.sm,
   },
   sectionCard: {
-    marginBottom: SIZES.md,
+    marginBottom: 15,
+  },
+  sectionCardInner: {
+    padding: SIZES.cardPadding,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -441,54 +453,94 @@ const styles = StyleSheet.create({
     ...FONTS.medium,
   },
   pagedContainer: {
-    gap: 16,
+    gap: 8,
   },
   pageItem: {
     width: width - 64,
+    alignItems: "center",
+    justifyContent: "center",
   },
   dots: {
     flexDirection: "row",
     justifyContent: "center",
     gap: 6,
-    marginTop: SIZES.md,
-    marginBottom: SIZES.md,
+    paddingVertical: 14,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "#555",
   },
   dotActive: {
-    backgroundColor: COLORS.textPrimary,
+    backgroundColor: "#e5e5e5",
   },
   listCard: {
-    minHeight: 200,
+    width: 300,
   },
-  listItem: {
+  listCardInner: {
+    paddingTop: 20,
+    paddingBottom: 16,
+  },
+  cardHeader: {
+    paddingHorizontal: 18,
+    paddingBottom: 14,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#3d3d3d",
+  },
+  cardTitle: {
+    fontSize: 15,
+    ...FONTS.semiBold,
+    color: "#f0f0f0",
+    marginBottom: 2,
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "rgba(255, 255, 255, 0.08)",
-    gap: 12,
   },
-  listText: {
-    color: COLORS.textPrimary,
-    fontSize: SIZES.body,
-    ...FONTS.medium,
+  emojiText: {
+    marginRight: 6,
+  },
+  cardSub: {
+    fontSize: 12,
+    color: "#888",
+  },
+  foodItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 11,
+    paddingHorizontal: 18,
+  },
+  checkCircle: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: "#2563eb",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  foodName: {
+    fontSize: 14,
+    color: "#e5e5e5",
     textTransform: "capitalize",
+  },
+  divider: {
+    height: 0.5,
+    backgroundColor: "#3a3a3a",
+    marginHorizontal: 18,
+  },
+  cuisineEmoji: {
+    fontSize: 18,
+    marginRight: 2,
+  },
+  cuisineDesc: {
+    color: "#888",
+    fontSize: 12,
+    marginTop: 2,
   },
   emptyText: {
     color: COLORS.textTertiary,
     fontSize: SIZES.caption,
     textAlign: "center",
     paddingVertical: SIZES.lg,
-  },
-  cuisineDesc: {
-    color: COLORS.textTertiary,
-    fontSize: SIZES.small,
-    ...FONTS.regular,
-    marginTop: 2,
   },
 });

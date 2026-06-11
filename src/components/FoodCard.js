@@ -28,7 +28,7 @@ export default function FoodCard({ food, style }) {
 
       <View style={styles.details}>
         <Text style={styles.name}>{food.name}</Text>
-        
+
         {food.tags && food.tags.length > 0 && (
           <View style={styles.tagsContainer}>
             {food.tags.map((tag, idx) => (

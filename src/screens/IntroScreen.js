@@ -10,12 +10,14 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Background from "../components/common/Background";
 import GlassCard from "../components/common/GlassCard";
+import { useSwipeContext } from "../context/SwipeContext";
 import { COLORS, SIZES, FONTS } from "../constants/theme";
 
 const { width, height } = Dimensions.get("window");
 
 export default function DesignFoodPlanScreen({ navigation }) {
   const insets = useSafeAreaInsets();
+  const { dispatch } = useSwipeContext();
   const cardHeight = Math.min(540, Math.max(400, height - 280));
 
   return (
@@ -50,7 +52,10 @@ export default function DesignFoodPlanScreen({ navigation }) {
           <TouchableOpacity
             style={styles.ctaButton}
             activeOpacity={0.85}
-            onPress={() => navigation && navigation.navigate("Swipe")}
+            onPress={() => {
+              dispatch({ type: "RESET" });
+              navigation && navigation.navigate("Swipe");
+            }}
           >
             <Text style={styles.ctaText}>Start Swiping</Text>
           </TouchableOpacity>
@@ -59,7 +64,6 @@ export default function DesignFoodPlanScreen({ navigation }) {
           <Text style={styles.caption}>Takes about 2 minutes.</Text>
         </GlassCard>
 
-        {/* Bottom space to offset the absolute BottomBar */}
         <View style={{ height: 100 }} />
       </View>
     </Background>
